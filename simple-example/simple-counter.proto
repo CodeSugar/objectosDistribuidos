@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package simple;
+
+service SimpleCounter {
+  rpc Up(Empty) returns (CounterResponse);
+}
+
+message Empty {}
+
+message CounterResponse {
+  int32 value = 1;
+  string server_id = 2;
+}

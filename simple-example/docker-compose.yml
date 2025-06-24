@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  simple-counter:
+    build:
+      context: .
+      dockerfile: Dockerfile.counter
+    container_name: simple-counter
+    environment:
+      - SERVER_ID=simple-counter
+      - PORT=50055
+      - DATA_DIR=/data
+    volumes:
+      - simple-counter-data:/data
+    networks:
+      - simple-network
+
+  simple-gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile.gateway
+    container_name: simple-gateway
+    ports:
+      - "8090:8090"
+    environment:
+      - PORT=8090
+    depends_on:
+      - simple-counter
+    networks:
+      - simple-network
+
+  simple-client:
+    image: nginx:alpine
+    container_name: simple-client
+    ports:
+      - "8080:80"
+    volumes:
+      - ./client:/usr/share/nginx/html
+    depends_on:
+      - simple-gateway
+    networks:
+      - simple-network
+
+volumes:
+  simple-counter-data:
+    driver: local
+
+networks:
+  simple-network:
+    driver: bridge
