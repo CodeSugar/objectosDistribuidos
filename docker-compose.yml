@@ -1,0 +1,120 @@
+version: '3.8'
+
+services:
+  grpc-server-1:
+    build: .
+    container_name: grpc-server-1
+    environment:
+      - SERVER_ID=server-1
+      - SERVER_NAME=Calculator Server 1
+      - PORT=50051
+    networks:
+      - grpc-network
+
+  grpc-server-2:
+    build: .
+    container_name: grpc-server-2
+    environment:
+      - SERVER_ID=server-2
+      - SERVER_NAME=Calculator Server 2
+      - PORT=50051
+    networks:
+      - grpc-network
+
+  grpc-server-3:
+    build: .
+    container_name: grpc-server-3
+    environment:
+      - SERVER_ID=server-3
+      - SERVER_NAME=Calculator Server 3
+      - PORT=50051
+    networks:
+      - grpc-network
+
+  counter-server:
+    build:
+      context: .
+      dockerfile: Dockerfile.counter
+    container_name: counter-server
+    environment:
+      - SERVER_ID=counter-server
+      - SERVER_NAME=Counter Server
+      - PORT=50054
+      - DATA_DIR=/data
+    volumes:
+      - counter-data:/data
+    networks:
+      - grpc-network
+
+  gateway-1:
+    build:
+      context: .
+      dockerfile: Dockerfile.gateway
+    container_name: gateway-1
+    ports:
+      - "8081:8080"
+    environment:
+      - PORT=8080
+    depends_on:
+      - grpc-server-1
+      - grpc-server-2
+      - grpc-server-3
+      - counter-server
+    networks:
+      - grpc-network
+
+  gateway-2:
+    build:
+      context: .
+      dockerfile: Dockerfile.gateway
+    container_name: gateway-2
+    ports:
+      - "8082:8080"
+    environment:
+      - PORT=8080
+    depends_on:
+      - grpc-server-1
+      - grpc-server-2
+      - grpc-server-3
+      - counter-server
+    networks:
+      - grpc-network
+
+  gateway-3:
+    build:
+      context: .
+      dockerfile: Dockerfile.gateway
+    container_name: gateway-3
+    ports:
+      - "8083:8080"
+    environment:
+      - PORT=8080
+    depends_on:
+      - grpc-server-1
+      - grpc-server-2
+      - grpc-server-3
+      - counter-server
+    networks:
+      - grpc-network
+
+  web-client:
+    image: nginx:alpine
+    container_name: web-client
+    ports:
+      - "8080:80"
+    volumes:
+      - ./client:/usr/share/nginx/html
+    depends_on:
+      - gateway-1
+      - gateway-2
+      - gateway-3
+    networks:
+      - grpc-network
+
+volumes:
+  counter-data:
+    driver: local
+
+networks:
+  grpc-network:
+    driver: bridge

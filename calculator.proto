@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package calculator;
+
+service Calculator {
+  rpc Add(NumberRequest) returns (NumberResponse);
+  rpc Multiply(NumberRequest) returns (NumberResponse);
+  rpc GetServerInfo(Empty) returns (ServerInfo);
+}
+
+service Counter {
+  rpc Up(Empty) returns (CounterResponse);
+  rpc Down(Empty) returns (CounterResponse);
+  rpc GetCounter(Empty) returns (CounterResponse);
+}
+
+message NumberRequest {
+  double a = 1;
+  double b = 2;
+}
+
+message NumberResponse {
+  double result = 1;
+  string server_id = 2;
+}
+
+message Empty {}
+
+message ServerInfo {
+  string server_id = 1;
+  string server_name = 2;
+  int32 port = 3;
+}
+
+message CounterResponse {
+  int32 value = 1;
+  string server_id = 2;
+}
