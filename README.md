@@ -80,6 +80,18 @@ This project teaches key distributed systems concepts:
 - Multiple calculator servers ensure availability
 - System continues working even if individual components fail
 
+## 📸 Demo Screenshots & Video
+
+### **System Interface**
+![Distributed Objects Interface](media-doc/ss1.png)
+
+*The interactive web interface showing the complete distributed system visualization with gateways, backend servers, and real-time request logs.*
+
+### **Live Demo Video**
+[![Demo Video](media-doc/ss1.png)](media-doc/demo-optimized.mp4)
+
+*Click to watch a demonstration of the system in action, showing load balancing, server intercommunication, and real-time visualization.*
+
 ## 🚀 Quick Start
 
 ### **Local Development**
